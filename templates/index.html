@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Price Prediction</title>
+
+    <!-- Google Font for better typography -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,500,700">
+
+    <style>
+        /* General Page Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(to bottom right, rgba(0, 0, 50, 0.8), rgba(0, 0, 100, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542450256-2dd6d209ff85?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80') no-repeat center center/cover;
+            animation: backgroundAnimation 10s infinite alternate;
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                filter: brightness(0.9);
+            }
+
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        /* Navbar Styling */
+        nav {
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    padding: 15px 30px; /* Increased padding for a better look */
+    width: 100%;
+    position: fixed;
+    top: 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background and shadow */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: space-between; /* Space between items */
+    align-items: center; /* Center items vertically */
+}
+
+nav:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7); /* Deeper shadow on hover */
+}
+
+/* Logo or title styling */
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #fff; /* White text for contrast */
+    letter-spacing: 1px; /* Slight spacing for elegance */
+    transition: transform 0.3s ease; /* Add smooth transform */
+}
+
+/* Scale effect on hover */
+nav:hover h1 {
+    transform: scale(1.05); /* Slightly grow the title on hover */
+}
+
+/* Additional links styling (if any) */
+.nav-links {
+    display: flex; /* Flex container for links */
+    gap: 20px; /* Space between links */
+}
+
+.nav-link {
+    color: #fff; /* White text */
+    text-decoration: none; /* Remove underline */
+    font-weight: 500; /* Medium weight for links */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.nav-link:hover {
+    color: #e74c3c; /* Change to a nice accent color on hover */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow on hover */
+}
+
+
+        /* Form Container Styling */
+        .container {
+            width: 90%;
+            margin-top: 80px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .left-column,
+        .right-column {
+            width: 48%;
+            margin-bottom: 20px;
+            margin-right: 1%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        h5 {
+            font-size: 18px;
+            font-weight: 500;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Input Fields */
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            background: rgba(255, 255, 255, 0.6);
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        input:focus,
+        select:focus {
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            transform: scale(1.02);
+            border: 2px solid #ffcc00;
+            z-index: 2;
+        }
+
+        /* Submit Button */
+        .btn {
+            width: 15%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            background-color: #ffcc00; /* Bright yellow */
+            border: none;
+            border-radius: 5px;
+            color: #333; /* Dark text for contrast */
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background-color: #ffd700; /* Lighter yellow on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 20px;
+            animation: fadeIn 2s ease;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+        
+    footer {
+        margin-top: 10px;
+        background-color: rgba(0, 0, 0, 0.6);
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    nav h1 span {
+    transition: color 0.3s ease; /* Smooth color transition */
+        font-size: 30px;
+}
+
+nav h1 span:hover {
+    color: #ffd700; /* Change color on hover for an interactive effect */
+    
+}
+
+
+
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h1>
+            <span style="color: #eceaea;">Flight Price Predictor</span> 
+            <span style="color: #fff;">by</span> 
+            <span style="color: #ffcc00;"> Hanzla Zafar</span>
+        </h1>
+    </nav>
+    
+
+    <div class="container">
+        <form action="\predict" method="post">
+            <div class="row">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <!-- Source -->
+                    <div class="card">
+                        <h5>Source</h5>
+                        <select name="Source" id="Source" required>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Chennai">Chennai</option>
+                        </select>
+                    </div>
+                    <!-- Departure -->
+                    <div class="card">
+                        <h5>Departure</h5>
+                        <input type="datetime-local" name="Dep_Time" id="Dep_Time" required>
+                    </div>
+                    <!-- Airline -->
+                    <div class="card">
+                        <h5>Airline</h5>
+                        <select name="airline" id="airline" required>
+                            <option value="GoAir">GoAir</option>
+                            <option value="Vistara">Vistara</option>
+                            <option value="Vistara Premium economy">Vistara Premium economy</option>
+                            <option value="Air India">Air India</option>
+                            <option value="Multiple carriers">Multiple carriers</option>
+                            <option value="SpiceJet">SpiceJet</option>
+                            <option value="IndiGo">IndiGo</option>
+                            <option value="Trujet">Trujet</option>
+                            <option value="Air Asia">Air Asia</option>
+                            <option value="Jet Airways">Jet Airways</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+                    <!-- Destination -->
+                    <div class="card">
+                        <h5>Destination</h5>
+                        <select name="Destination" id="Destination" required>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Cochin">Cochin</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Kolkata">Kolkata</option>
+                        </select>
+                    </div>
+                    <!-- Arrival -->
+                    <div class="card">
+                        <h5>Arrival</h5>
+                        <input type="datetime-local" name="Arrival_Time" id="Arrival_Time" required>
+                    </div>
+                    <!-- Stopage -->
+                    <div class="card">
+                        <h5>Stopage</h5>
+                        <select name="Stopage" id="Stopage" required>
+                            <option value="0">Non-stop</option>
+                            <option value="1">1 Stop</option>
+                            <option value="2">2 Stops</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn">Predict Price</button>
+        </form>
+    </div>
+
+    <footer>
+        <p style="font-size: 17px; color: #b1310b; margin-top: 0px; animation: fadeIn 2s ease;">
+            &copy; Made by Hanzla Zafar with ❤️
+        </p>
+    </footer>
+    
+
+</body>
+
+</html>
